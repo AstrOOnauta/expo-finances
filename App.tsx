@@ -9,6 +9,7 @@ import {
 
 import Dashboard from './src/screens/Dashboard';
 import theme from './src/styles/theme';
+import { StatusBar } from 'react-native';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -17,8 +18,13 @@ export default function App() {
     Poppins_700Bold,
   });
 
+  if (!fontsLoaded) {
+    return null;
+  }
+
   return (
     <ThemeProvider theme={theme}>
+      <StatusBar barStyle="light-content" backgroundColor="#303030" />
       <Dashboard />
     </ThemeProvider>
   );
