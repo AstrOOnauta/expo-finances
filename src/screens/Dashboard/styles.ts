@@ -3,12 +3,12 @@ import {RFPercentage} from "react-native-responsive-fontsize"
 
 export const DashboardContainer = styled.SafeAreaView`
   flex: 1;
-  background-color: ${(props)=>props.theme.colors.white};
+  background-color: ${(props)=>props.theme.colors.blueGrey};
 `
 
 export const Header = styled.View`
   width: 100%;
-  height: ${RFPercentage(42)}px;
+  height: ${RFPercentage(30)}px;
   padding: ${RFPercentage(2)}px;
   justify-content: space-between;
   flex-direction: row;
@@ -62,4 +62,13 @@ export const EyeButton = styled.TouchableOpacity`
 
 export const SignOutButton = styled.TouchableOpacity`
   margin-left: 20px;
+`
+
+export const SummaryCards = styled.ScrollView.attrs({
+  horizontal: true,
+  showHorizontalScrollIndicator: false,
+  contentContainerStyle: { paddingVertical: 10, paddingHorizontal: 10 }
+})`
+  position: absolute;
+  margin-top: ${RFPercentage(12)}px;
 `

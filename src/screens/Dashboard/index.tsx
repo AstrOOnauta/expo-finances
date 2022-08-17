@@ -10,10 +10,12 @@ import {
   IconArea,
   Photo,
   SignOutButton,
+  SummaryCards,
   UserInfo,
   UserName,
   Welcome,
 } from './styles';
+import Summary from '../../components/Summary';
 
 export default function Dashboard() {
   return (
@@ -42,6 +44,26 @@ export default function Dashboard() {
           </IconArea>
         </Card>
       </Header>
+      <SummaryCards>
+        <Summary
+          type="up"
+          title="Deposit"
+          amount="R$ 17.400,00"
+          lastTransition="Last deposit April 13"
+        />
+        <Summary
+          type="down"
+          title="Withdraw"
+          amount="R$ 1.259,00"
+          lastTransition="Last withdraw April 13"
+        />
+        <Summary
+          type="total"
+          title="Total"
+          amount="R$ 16.141,00"
+          lastTransition="April 10-13"
+        />
+      </SummaryCards>
     </DashboardContainer>
   );
 }
