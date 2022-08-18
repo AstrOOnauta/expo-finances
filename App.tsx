@@ -10,6 +10,7 @@ import {
 import Dashboard from './src/screens/Dashboard';
 import theme from './src/styles/theme';
 import { StatusBar } from 'react-native';
+import CreateTransaction from './src/screens/CreateTransaction';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -25,7 +26,8 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <StatusBar barStyle="light-content" backgroundColor="#303030" />
-      <Dashboard />
+      <CreateTransaction />
+      {/* <Dashboard /> */}
     </ThemeProvider>
   );
 }
