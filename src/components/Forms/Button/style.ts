@@ -11,6 +11,6 @@ export const ButtonContainer = styled.TouchableOpacity`
 
 export const ButtonTitle = styled.Text`
   color: ${(props)=>props.theme.colors.white};
-  font-family: ${(props)=>props.theme.fonts.medium} ;
+  font-family: ${(props)=>props.theme.fonts.medium};
 
 `
