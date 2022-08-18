@@ -51,12 +51,12 @@ export const BodyArea = styled.View`
 export const BodyTitle = styled.Text`
   font-family: ${(props)=>props.theme.fonts.medium};
   line-height: 30px;
-  font-size: 26;
+  font-size: 26px;
 `
 
 export const BodyText = styled.Text<TypeProps>`
 font-family: ${(props)=>props.theme.fonts.medium};
-font-size: 12;
+font-size: 12px;
 color: ${(props)=>props.theme.colors.grey};
 margin-left: -2px;
 

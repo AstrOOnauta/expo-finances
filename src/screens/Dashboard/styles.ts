@@ -72,3 +72,14 @@ export const SummaryCards = styled.ScrollView.attrs({
   position: absolute;
   margin-top: ${RFPercentage(12)}px;
 `
+
+export const TransactionsTitle = styled.Text`
+  font-family: ${(props)=>props.theme.fonts.medium};
+  margin: ${RFPercentage(12)}px ${RFPercentage(3.5)}px ${RFPercentage(2)}px ${RFPercentage(3.5)}px;
+`
+
+export const TransactionCards = styled.FlatList`
+  flex: 1;
+  width: 100%;
+  padding: 0 ${RFPercentage(3.5)}px;
+`
