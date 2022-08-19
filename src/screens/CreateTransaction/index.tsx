@@ -64,9 +64,12 @@ export default function CreateTransaction() {
     try {
       const dataKey = '@finances:transactions';
 
+      const data = await AsyncStorage.getItem(dataKey);
+      const transactions = data ? JSON.parse(data) : [];
+
       await AsyncStorage.setItem(
         dataKey,
-        JSON.stringify(newTransaction)
+        JSON.stringify([...transactions, newTransaction])
       );
 
       reset();

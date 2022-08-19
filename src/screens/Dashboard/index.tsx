@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Feather, Ionicons } from '@expo/vector-icons';
 
 import {
@@ -20,35 +20,125 @@ import {
 import Summary from '../../components/Summary';
 import Transaction from '../../components/Transaction';
 import { TransactionsInterface } from '../../shared/interfaces/transactions';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
 
-const TRANSACTIONS_DATA: TransactionsInterface[] = [
-  {
-    type: 'up',
-    title: 'Desenvolvimento de Site',
-    amount: 'R$ 12.000,00',
-    category: 'Vendas',
-    icon: 'dollar-sign',
-    date: new Date('2022-07-08T11:19:05.340000Z'),
-  },
-  {
-    type: 'down',
-    title: 'Hamburgueria Pizzy',
-    amount: '- R$ 59,00',
-    category: 'Alimentação',
-    icon: 'coffee',
-    date: new Date('2022-07-08T11:19:05.340000Z'),
-  },
-  {
-    type: 'down',
-    title: 'Aluguel do apartamento',
-    amount: '- R$ 1.200,00',
-    category: 'Casa',
-    icon: 'home',
-    date: new Date('2022-07-08T11:19:05.340000Z'),
-  },
-];
+interface SummariesInterface {
+  deposit: {
+    value: number;
+    lastTransaction: Date;
+  };
+  withdraw: {
+    value: number;
+    lastTransaction: Date;
+  };
+  total: {
+    value: number;
+    range: string;
+  };
+}
 
 export default function Dashboard() {
+  const [transactions, setTransactions] = useState<
+    TransactionsInterface[]
+  >([]);
+  const [summaries, setSummaries] = useState<SummariesInterface>({
+    deposit: {
+      value: 0,
+      lastTransaction: new Date(),
+    },
+    withdraw: {
+      value: 0,
+      lastTransaction: new Date(),
+    },
+    total: {
+      value: 0,
+      range: '',
+    },
+  });
+
+  async function loadTransactions() {
+    const response = await AsyncStorage.getItem(
+      '@finances:transactions'
+    );
+    const dataTransactions = response ? JSON.parse(response!) : [];
+    setTransactions(dataTransactions);
+  }
+
+  useEffect(() => {
+    loadTransactions();
+  }, []);
+
+  useEffect(() => {
+    let upTransactions = 0;
+    let downTransactions = 0;
+    let totalTransactions = 0;
+
+    transactions.map((transaction) => {
+      if (transaction.transactionType === 'up') {
+        upTransactions += Number(transaction.price);
+        totalTransactions += Number(transaction.price);
+      } else {
+        downTransactions -= Number(transaction.price);
+        totalTransactions -= Number(transaction.price);
+      }
+    });
+
+    const lastTransaction = Math.max.apply(
+      Math,
+      transactions.map((transaction) =>
+        new Date(transaction.date).getTime()
+      )
+    );
+
+    const lastUpTransaction = Math.max.apply(
+      Math,
+      transactions
+        .filter((transaction) => transaction.transactionType === 'up')
+        .map((transaction) => new Date(transaction.date).getTime())
+    );
+
+    const lastDownTransaction = Math.max.apply(
+      Math,
+      transactions
+        .filter(
+          (transaction) => transaction.transactionType === 'down'
+        )
+        .map((transaction) => new Date(transaction.date).getTime())
+    );
+
+    setSummaries({
+      deposit: {
+        value: upTransactions,
+        lastTransaction: new Date(lastUpTransaction),
+      },
+      withdraw: {
+        value: downTransactions,
+        lastTransaction: new Date(lastDownTransaction),
+      },
+      total: {
+        value: totalTransactions,
+        range: `${new Date(lastTransaction).toLocaleDateString(
+          'en-US',
+          {
+            month: 'short',
+          }
+        )} 01 - ${new Date(lastTransaction).toLocaleDateString(
+          'en-US',
+          {
+            day: 'numeric',
+          }
+        )}`,
+      },
+    });
+  }, [transactions]);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadTransactions();
+    }, [])
+  );
+
   return (
     <DashboardContainer>
       <Header>
@@ -79,26 +169,38 @@ export default function Dashboard() {
         <Summary
           type="up"
           title="Deposit"
-          amount="R$ 17.400,00"
-          lastTransition="Last deposit April 13"
+          amount={summaries.deposit.value}
+          lastTransition={`Last deposit ${summaries.deposit.lastTransaction.toLocaleDateString(
+            'en-US',
+            {
+              month: 'short',
+              day: 'numeric',
+            }
+          )}`}
         />
         <Summary
           type="down"
           title="Withdraw"
-          amount="R$ 1.259,00"
-          lastTransition="Last withdraw April 13"
+          amount={summaries.withdraw.value}
+          lastTransition={`Last withdraw ${summaries.withdraw.lastTransaction.toLocaleDateString(
+            'en-US',
+            {
+              month: 'short',
+              day: 'numeric',
+            }
+          )}`}
         />
         <Summary
           type="total"
           title="Total"
-          amount="R$ 16.141,00"
-          lastTransition="April 10-13"
+          amount={summaries.total.value}
+          lastTransition={summaries.total.range}
         />
       </SummaryCards>
       <TransactionsTitle>Transactions</TransactionsTitle>
       <TransactionCards
         showsVerticalScrollIndicator={false}
-        data={TRANSACTIONS_DATA}
+        data={transactions}
         renderItem={({ item }: any, index: number) => (
           <Transaction data={item} key={index} />
         )}

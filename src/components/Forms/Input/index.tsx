@@ -12,6 +12,8 @@ export default function Input(props: InputProps) {
       value={props.value}
       keyboardType={props.keyboardType}
       placeholder={props.title}
+      autoCapitalize={props.autoCapitalize}
+      autoCorrect={props.autoCorrect}
     />
   );
 }

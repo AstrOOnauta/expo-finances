@@ -1,3 +1,6 @@
+import 'intl';
+import 'intl/locale-data/jsonp/en-US';
+
 import { TransactionsInterface } from '../../shared/interfaces/transactions';
 import {
   Icon,
@@ -8,6 +11,7 @@ import {
   TransactionTitle,
   TransactionType,
 } from './style';
+import { categories } from '../../shared/utils/categories';
 
 interface TransactionProps {
   data: TransactionsInterface;
@@ -16,15 +20,33 @@ interface TransactionProps {
 export default function Transaction(props: TransactionProps) {
   return (
     <TransactionContainer>
-      <TransactionTitle>{props.data.title}</TransactionTitle>
-      <TransactionAmount type={props.data.type}>
-        {props.data.amount}
+      <TransactionTitle>{props.data.transaction}</TransactionTitle>
+      <TransactionAmount type={props.data.transactionType}>
+        {props.data.transactionType === 'down' ? '- ' : ''}
+        {new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+        }).format(Number(props.data.price))}
       </TransactionAmount>
       <TransactionFooter>
-        <Icon name={props.data.icon} />
-        <TransactionType>{props.data.category}</TransactionType>
+        <Icon
+          name={
+            categories.filter(
+              (findedCategory) =>
+                props.data.category === findedCategory.key
+            )[0].icon
+          }
+        />
+        <TransactionType>
+          {
+            categories.filter(
+              (findedCategory) =>
+                props.data.category === findedCategory.key
+            )[0].name
+          }
+        </TransactionType>
         <TransactionDate>
-          {props.data.date.toLocaleDateString('en-US')}
+          {new Date(props.data.date).toLocaleDateString('en-US')}
         </TransactionDate>
       </TransactionFooter>
     </TransactionContainer>

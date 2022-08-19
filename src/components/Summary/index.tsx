@@ -10,14 +10,10 @@ import {
   SummaryContainer,
 } from './style';
 
-// withdraw //#E52E4D //#FBB034
-// <Feather name="arrow-down-circle" size={24} color="black" />
-// <Feather name="dollar-sign" size={24} color="black" />
-
 interface SummaryProps {
   type: 'up' | 'down' | 'total';
   title: string;
-  amount: string;
+  amount: number;
   lastTransition: string;
 }
 
@@ -35,7 +31,12 @@ export default function Summary(props: SummaryProps) {
         <HeaderIcon name={icon[props.type]} type={props.type} />
       </HeaderArea>
       <BodyArea>
-        <BodyTitle>{props.amount}</BodyTitle>
+        <BodyTitle>
+          {new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+          }).format(Number(props.amount))}
+        </BodyTitle>
         <BodyText type={props.type}>{props.lastTransition}</BodyText>
       </BodyArea>
     </SummaryContainer>

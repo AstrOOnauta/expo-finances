@@ -1,8 +1,9 @@
 export interface TransactionsInterface {
-  type: 'up' | 'down';
-  title: string;
-  amount: string;
+  id: string;
+  transactionType: 'up' | 'down';
+  transaction: string;
+  price: string;
   category: string;
-  icon: string;
+  icon?: string;
   date: Date;
 };

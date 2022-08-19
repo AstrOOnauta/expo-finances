@@ -20,17 +20,6 @@ export function AppRoutes() {
       })}
     >
       <Tab.Screen
-        name="New Transaction"
-        component={CreateTransaction}
-        options={{
-          headerShown: false,
-          tabBarShowLabel: false,
-          tabBarIcon: ({ color, size }) => (
-            <Feather name="dollar-sign" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
         name="Dashboard"
         component={Dashboard}
         options={{
@@ -41,7 +30,17 @@ export function AppRoutes() {
           ),
         }}
       />
-
+      <Tab.Screen
+        name="New Transaction"
+        component={CreateTransaction}
+        options={{
+          headerShown: false,
+          tabBarShowLabel: false,
+          tabBarIcon: ({ color, size }) => (
+            <Feather name="dollar-sign" size={size} color={color} />
+          ),
+        }}
+      />
       <Tab.Screen
         name="Resume"
         component={CreateTransaction}
