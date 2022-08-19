@@ -66,7 +66,7 @@ export const SignOutButton = styled.TouchableOpacity`
 
 export const SummaryCards = styled.ScrollView.attrs({
   horizontal: true,
-  showHorizontalScrollIndicator: false,
+  showsHorizontalScrollIndicator: false,
   contentContainerStyle: { paddingVertical: 10, paddingHorizontal: 10 }
 })`
   position: absolute;

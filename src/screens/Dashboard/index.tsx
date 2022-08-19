@@ -97,6 +97,7 @@ export default function Dashboard() {
       </SummaryCards>
       <TransactionsTitle>Transactions</TransactionsTitle>
       <TransactionCards
+        showsVerticalScrollIndicator={false}
         data={TRANSACTIONS_DATA}
         renderItem={({ item }: any, index: number) => (
           <Transaction data={item} key={index} />
