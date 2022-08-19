@@ -5,6 +5,10 @@ import {
   Modal,
   TouchableWithoutFeedback,
 } from 'react-native';
+import { Controller, FieldValues, useForm } from 'react-hook-form';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import uuid from 'react-native-uuid';
+import { useNavigation } from '@react-navigation/native';
 
 import Button from '../../components/Forms/Button';
 import Input from '../../components/Forms/Input';
@@ -21,7 +25,6 @@ import {
   Title,
   TransactionInfoArea,
 } from './style';
-import { Controller, FieldValues, useForm } from 'react-hook-form';
 
 export default function CreateTransaction() {
   const [transactionType, setTransactionType] = useState<string>('');
@@ -29,13 +32,14 @@ export default function CreateTransaction() {
   const [isCategoryModalOpen, setIsCategoryModalOpen] =
     useState<boolean>(false);
 
-  const { control, handleSubmit } = useForm();
+  const { control, handleSubmit, reset } = useForm();
+  const navigation = useNavigation();
 
   function handleTransactionType(type: string) {
     setTransactionType(type);
   }
 
-  function onSubmit(form: FieldValues) {
+  async function onSubmit(form: FieldValues) {
     if (
       category === '' ||
       transactionType === '' ||
@@ -45,18 +49,35 @@ export default function CreateTransaction() {
       return Alert.alert('Error', 'Fill all form fields!');
     }
 
-    if (form.price < 0 || typeof form.price === 'string') {
+    if (form.price < 0 || isNaN(form.price)) {
       return Alert.alert('Error', 'Inform a valid price!');
     }
 
     const newTransaction = {
+      id: uuid.v4() as string,
       ...form,
       transactionType,
       category,
       date: new Date(),
     };
 
-    console.log(newTransaction);
+    try {
+      const dataKey = '@finances:transactions';
+
+      await AsyncStorage.setItem(
+        dataKey,
+        JSON.stringify(newTransaction)
+      );
+
+      reset();
+      setCategory('');
+      setTransactionType('');
+
+      navigation.navigate('Dashboard' as never);
+    } catch (error) {
+      console.log(error);
+      Alert.alert('Error trying to save a new transaction...');
+    }
   }
 
   return (
