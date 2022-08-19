@@ -7,10 +7,10 @@ import {
   Poppins_500Medium,
   Poppins_700Bold,
 } from '@expo-google-fonts/poppins';
+import { NavigationContainer } from '@react-navigation/native';
 
-import Dashboard from './src/screens/Dashboard';
 import theme from './src/styles/theme';
-import CreateTransaction from './src/screens/CreateTransaction';
+import { AppRoutes } from './src/routes/app.routes';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -26,8 +26,9 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <StatusBar barStyle="light-content" backgroundColor="#303030" />
-      <CreateTransaction />
-      {/* <Dashboard /> */}
+      <NavigationContainer>
+        <AppRoutes />
+      </NavigationContainer>
     </ThemeProvider>
   );
 }
