@@ -6,7 +6,7 @@ import {
 
 interface HistoryCardProps {
   title: string;
-  amount: string;
+  amount: number;
   color: string;
 }
 
@@ -18,7 +18,7 @@ export default function HistoryCard(props: HistoryCardProps) {
         {new Intl.NumberFormat('en-US', {
           style: 'currency',
           currency: 'USD',
-        }).format(Number(props.amount))}
+        }).format(props.amount)}
       </HistoryAmount>
     </HistoryCardContainer>
   );

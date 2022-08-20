@@ -24,6 +24,11 @@ export const BodyArea = styled.View`
   padding: 16px;
 `
 
+export const ChartArea = styled.View`
+  width: 100%;
+  align-items: center;
+`
+
 export const HistoriesList = styled.ScrollView`
   width: 100%;
 `
