@@ -5,6 +5,7 @@ import { Feather } from '@expo/vector-icons';
 
 import Dashboard from '../screens/Dashboard';
 import CreateTransaction from '../screens/CreateTransaction';
+import Resume from '../screens/Resume';
 
 export function AppRoutes() {
   const Tab = createBottomTabNavigator();
@@ -43,7 +44,7 @@ export function AppRoutes() {
       />
       <Tab.Screen
         name="Resume"
-        component={CreateTransaction}
+        component={Resume}
         options={{
           headerShown: false,
           tabBarShowLabel: false,
