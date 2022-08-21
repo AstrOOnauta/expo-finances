@@ -12,10 +12,22 @@ import {
   ChartArea,
   Header,
   HistoriesList,
+  MonthlyFilterArea,
+  MonthTitle,
+  NextIcon,
+  NextMonthButton,
+  NoDataArea,
+  NoDataIcon,
+  NoDataTitle,
+  PreviousIcon,
+  PreviousMonthButton,
   ResumeContainer,
   Title,
 } from './style';
 import { useTheme } from 'styled-components';
+import { addMonths, subMonths } from 'date-fns';
+import { format } from 'date-fns/esm';
+import { Text } from 'react-native';
 
 interface AmountByCategory {
   category: string;
@@ -28,8 +40,17 @@ export default function Resume() {
   const [amountsByCategory, setAmountsByCategory] = useState<
     AmountByCategory[]
   >([]);
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
   const theme = useTheme();
+
+  function handleDateChange(action: 'prev' | 'next') {
+    if (action === 'prev') {
+      setSelectedDate(subMonths(selectedDate, 1));
+    } else {
+      setSelectedDate(addMonths(selectedDate, 1));
+    }
+  }
 
   async function loadTransactions() {
     const response = await AsyncStorage.getItem(
@@ -40,7 +61,11 @@ export default function Resume() {
     const totalAmount = dataTransactions
       .filter(
         (item: TransactionsInterface) =>
-          item.transactionType === 'down'
+          item.transactionType === 'down' &&
+          new Date(item.date).getMonth() ===
+            selectedDate.getMonth() &&
+          new Date(item.date).getFullYear() ===
+            selectedDate.getFullYear()
       )
       .reduce(
         (acc: any, curr: TransactionsInterface) =>
@@ -49,39 +74,56 @@ export default function Resume() {
       );
 
     const categoriesFiltered = dataTransactions
-      .map((item: TransactionsInterface) => item.category)
+      .map((item: TransactionsInterface) => {
+        if (
+          new Date(item.date).getMonth() ===
+            selectedDate.getMonth() &&
+          new Date(item.date).getFullYear() ===
+            selectedDate.getFullYear()
+        ) {
+          return item.category;
+        }
+      })
       .filter(
         (value: string, index: number, self: string[]) =>
           value !== 'salary' && self.indexOf(value) === index
       );
 
-    const result = categoriesFiltered.map((category: string) => {
-      const categoryAmount = dataTransactions
-        .filter(
-          (transaction: TransactionsInterface) =>
-            transaction.transactionType === 'down' &&
-            transaction.category === category
-        )
-        .reduce(
-          (acc: any, curr: TransactionsInterface) =>
-            acc + Number(curr.price),
-          0
-        );
+    const result = categoriesFiltered[0]
+      ? categoriesFiltered.map((category: string) => {
+          const categoryAmount = dataTransactions
+            .filter(
+              (transaction: TransactionsInterface) =>
+                transaction.transactionType === 'down' &&
+                new Date(transaction.date).getMonth() ===
+                  selectedDate.getMonth() &&
+                new Date(transaction.date).getFullYear() ===
+                  selectedDate.getFullYear() &&
+                transaction.category === category
+            )
+            .reduce(
+              (acc: any, curr: TransactionsInterface) =>
+                acc + Number(curr.price),
+              0
+            );
 
-      const categoryPercentage = (
-        (categoryAmount / totalAmount) *
-        100
-      ).toFixed(0);
+          const categoryPercentage = (
+            (categoryAmount / totalAmount) *
+            100
+          ).toFixed(0);
 
-      return {
-        category,
-        amount: categoryAmount,
-        percentage: `${categoryPercentage}%`,
-        color: categories.filter(
-          (categoryFound) => categoryFound.key === category
-        )[0].color,
-      };
-    });
+          return {
+            category,
+            amount: categoryAmount,
+            percentage: `${categoryPercentage}%`,
+            color: category
+              ? categories.filter(
+                  (categoryFound) => categoryFound.key === category
+                )[0].color
+              : '#FFFFFF',
+          };
+        })
+      : [];
 
     setAmountsByCategory(result);
   }
@@ -89,6 +131,10 @@ export default function Resume() {
   useEffect(() => {
     loadTransactions();
   }, []);
+
+  useEffect(() => {
+    loadTransactions();
+  }, [selectedDate]);
 
   useFocusEffect(
     useCallback(() => {
@@ -102,44 +148,66 @@ export default function Resume() {
         <Title>Resume</Title>
       </Header>
       <BodyArea>
-        <ChartArea>
-          <VictoryPie
-            data={amountsByCategory}
-            x="percentage"
-            y="amount"
-            colorScale={amountsByCategory.map(
-              (category) => category.color
-            )}
-            labelRadius={50}
-            style={{
-              labels: {
-                fontSize: '16px',
-                fontWeight: 'bold',
-                fill: theme.colors.blueGrey,
-              },
-            }}
-          />
-        </ChartArea>
-        <HistoriesList showsVerticalScrollIndicator={false}>
-          {amountsByCategory.map((item, index) => {
-            return (
-              <HistoryCard
-                key={index}
-                title={
-                  categories.filter(
-                    (category) => item.category === category.key
-                  )[0].name
-                }
-                amount={item.amount}
-                color={
-                  categories.filter(
-                    (category) => item.category === category.key
-                  )[0].color
-                }
+        <MonthlyFilterArea>
+          <PreviousMonthButton
+            onPress={() => handleDateChange('prev')}
+          >
+            <PreviousIcon name="chevron-left" />
+          </PreviousMonthButton>
+          <MonthTitle>
+            {format(selectedDate, 'MMMM, yyyy')}
+          </MonthTitle>
+          <NextMonthButton onPress={() => handleDateChange('next')}>
+            <NextIcon name="chevron-right" />
+          </NextMonthButton>
+        </MonthlyFilterArea>
+        {amountsByCategory.length === 0 ? (
+          <NoDataArea>
+            <NoDataIcon name="image-search" />
+            <NoDataTitle>Not found data here...</NoDataTitle>
+          </NoDataArea>
+        ) : (
+          <>
+            <ChartArea>
+              <VictoryPie
+                data={amountsByCategory}
+                x="percentage"
+                y="amount"
+                colorScale={amountsByCategory.map(
+                  (category) => category.color
+                )}
+                labelRadius={80}
+                style={{
+                  labels: {
+                    fontSize: '16px',
+                    fontWeight: 'bold',
+                    fill: theme.colors.blueGrey,
+                  },
+                }}
               />
-            );
-          })}
-        </HistoriesList>
+            </ChartArea>
+            <HistoriesList showsVerticalScrollIndicator={false}>
+              {amountsByCategory.map((item, index) => {
+                return (
+                  <HistoryCard
+                    key={index}
+                    title={
+                      categories.filter(
+                        (category) => item.category === category.key
+                      )[0].name
+                    }
+                    amount={item.amount}
+                    color={
+                      categories.filter(
+                        (category) => item.category === category.key
+                      )[0].color
+                    }
+                  />
+                );
+              })}
+            </HistoriesList>
+          </>
+        )}
       </BodyArea>
     </ResumeContainer>
   );
