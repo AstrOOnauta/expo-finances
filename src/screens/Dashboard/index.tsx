@@ -66,10 +66,6 @@ export default function Dashboard() {
   }
 
   useEffect(() => {
-    loadTransactions();
-  }, []);
-
-  useEffect(() => {
     let upTransactions = 0;
     let downTransactions = 0;
     let totalTransactions = 0;

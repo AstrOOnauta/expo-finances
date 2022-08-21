@@ -128,18 +128,10 @@ export default function Resume() {
     setAmountsByCategory(result);
   }
 
-  useEffect(() => {
-    loadTransactions();
-  }, []);
-
-  useEffect(() => {
-    loadTransactions();
-  }, [selectedDate]);
-
   useFocusEffect(
     useCallback(() => {
       loadTransactions();
-    }, [])
+    }, [selectedDate])
   );
 
   return (
