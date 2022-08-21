@@ -2,7 +2,7 @@ import { RFPercentage } from "react-native-responsive-fontsize";
 import styled from "styled-components/native";
 
 export const ResumeContainer = styled.SafeAreaView`
- flex:1;
+  flex:1;
   background-color: ${(props)=>props.theme.colors.blueGrey};
   width: 100%;
 `
@@ -21,6 +21,7 @@ export const Title = styled.Text`
 `
 
 export const BodyArea = styled.View`
+  flex: 1;
   padding: 16px;
 `
 

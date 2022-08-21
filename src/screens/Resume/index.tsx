@@ -120,7 +120,7 @@ export default function Resume() {
             }}
           />
         </ChartArea>
-        <HistoriesList>
+        <HistoriesList showsVerticalScrollIndicator={false}>
           {amountsByCategory.map((item, index) => {
             return (
               <HistoryCard
