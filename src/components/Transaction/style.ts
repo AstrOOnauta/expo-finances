@@ -20,13 +20,14 @@ export const TransactionTitle = styled.Text`
 `
 
 export const TransactionAmount = styled.Text<TypeProps>`
+  margin-top: 8px;
   font-family: ${(props)=>props.theme.fonts.medium};
   font-size: 20px;
   color: ${(props)=>props.type === "up"? props.theme.colors.green:props.theme.colors.red}
 `
 
 export const TransactionFooter = styled.View`
-  margin-top: 24px;
+  margin-top: 16px;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;

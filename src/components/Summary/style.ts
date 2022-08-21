@@ -48,10 +48,14 @@ export const BodyArea = styled.View`
   align-items: flex-start;
 `
 
-export const BodyTitle = styled.Text`
+export const BodyTitle = styled.Text<TypeProps>`
   font-family: ${(props)=>props.theme.fonts.medium};
   line-height: 30px;
   font-size: 26px;
+
+  ${(props)=>props.type === "total" && css`
+    color: ${(props)=>props.theme.colors.white}
+  `};
 `
 
 export const BodyText = styled.Text<TypeProps>`
@@ -61,7 +65,7 @@ color: ${(props)=>props.theme.colors.grey};
 margin-left: -2px;
 
 ${(props)=>props.type === "total" && css`
-    color: ${(props)=>props.theme.colors.white}
+    color: ${(props)=>props.theme.colors.black}
   `};
 
 `

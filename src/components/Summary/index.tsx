@@ -31,7 +31,7 @@ export default function Summary(props: SummaryProps) {
         <HeaderIcon name={icon[props.type]} type={props.type} />
       </HeaderArea>
       <BodyArea>
-        <BodyTitle>
+        <BodyTitle type={props.type}>
           {new Intl.NumberFormat('en-US', {
             style: 'currency',
             currency: 'USD',
