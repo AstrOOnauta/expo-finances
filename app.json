@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "finances",
-    "slug": "finances",
+    "name": "meteor-finances",
+    "slug": "meteor-finances",
+    "schema": "meteor-finances",
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"

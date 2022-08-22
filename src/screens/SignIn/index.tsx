@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { Alert } from 'react-native';
 import SignInSocialButton from '../../components/SignInSocialButton';
+import AuthContext from '../../shared/context/AuthContext';
 
 import {
   AboutArea,
@@ -13,6 +15,17 @@ import {
 } from './style';
 
 export default function SignIn() {
+  const { user, signInWithGoogle } = useContext(AuthContext);
+
+  async function handleSignInWithGoogle() {
+    try {
+      await signInWithGoogle();
+    } catch (error) {
+      console.log(error);
+      Alert.alert('Error trying to connect to google account!');
+    }
+  }
+
   return (
     <SignInContainer>
       <AboutArea>
@@ -28,6 +41,7 @@ export default function SignIn() {
       </AboutArea>
       <ButtonsArea>
         <SignInSocialButton
+          onPress={handleSignInWithGoogle}
           logo="https://logopng.com.br/logos/google-37.png"
           title="Sign in with Google"
         />

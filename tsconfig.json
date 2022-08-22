@@ -1,8 +1,10 @@
 {
   "compilerOptions": {
     "strict": true,
+    "useUnknownInCatchVariables": false,
     "types": [
-      "@types/styled-components-react-native"
+      "@types/styled-components-react-native",
+      "node"
     ]
   },
   "extends": "expo/tsconfig.base"

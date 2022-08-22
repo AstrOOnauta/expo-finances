@@ -17,7 +17,10 @@ export default function SignInSocialButton(
   props: SignInSocialButtonProps
 ) {
   return (
-    <SignInSocialButtonContainer activeOpacity={0.6}>
+    <SignInSocialButtonContainer
+      activeOpacity={0.6}
+      onPress={props.onPress}
+    >
       <SocialIcon resizeMode="contain" source={{ uri: props.logo }} />
       <ButtonTextArea>
         <ButtonText>{props.title}</ButtonText>
