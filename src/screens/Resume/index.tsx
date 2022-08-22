@@ -21,9 +21,6 @@ import {
   MonthTitle,
   NextIcon,
   NextMonthButton,
-  NoDataArea,
-  NoDataIcon,
-  NoDataTitle,
   PreviousIcon,
   PreviousMonthButton,
   ResumeContainer,
@@ -34,6 +31,7 @@ import { addMonths, subMonths } from 'date-fns';
 import { format } from 'date-fns/esm';
 import { Text } from 'react-native';
 import AuthContext from '../../shared/context/AuthContext';
+import NoData from '../../components/NoData';
 
 interface AmountByCategory {
   category: string;
@@ -162,10 +160,7 @@ export default function Resume() {
           </NextMonthButton>
         </MonthlyFilterArea>
         {amountsByCategory.length === 0 ? (
-          <NoDataArea>
-            <NoDataIcon name="image-search" />
-            <NoDataTitle>Not found data here...</NoDataTitle>
-          </NoDataArea>
+          <NoData />
         ) : (
           <>
             <ChartArea>

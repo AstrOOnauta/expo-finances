@@ -56,24 +56,6 @@ export const NextIcon = styled(Feather)`
   font-size: 24px;
 `
 
-export const NoDataArea = styled.View`
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-`
-
-export const NoDataIcon = styled(MaterialCommunityIcons)`
-  color:${(props)=>props.theme.colors.grey};
-  font-size: 80px;
-  margin-bottom: 16px;
-`
-
-export const NoDataTitle = styled.Text`
-  color:${(props)=>props.theme.colors.grey};
-  font-family: ${(props)=>props.theme.fonts.medium};
-  font-size: 20px;
-`
-
 export const ChartArea = styled.View`
   margin-top: -28px;
   width: 100%;

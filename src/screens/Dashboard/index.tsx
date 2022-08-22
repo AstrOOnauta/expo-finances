@@ -28,6 +28,7 @@ import { TransactionsInterface } from '../../shared/interfaces/transactions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 import AuthContext from '../../shared/context/AuthContext';
+import NoData from '../../components/NoData';
 
 interface SummariesInterface {
   deposit: {
@@ -122,17 +123,20 @@ export default function Dashboard() {
       },
       total: {
         value: totalTransactions,
-        range: `${new Date(lastTransaction).toLocaleDateString(
-          'en-US',
-          {
-            month: 'short',
-          }
-        )} 01 - ${new Date(lastTransaction).toLocaleDateString(
-          'en-US',
-          {
-            day: 'numeric',
-          }
-        )}`,
+        range:
+          lastTransaction !== -Infinity
+            ? `${new Date(lastTransaction).toLocaleDateString(
+                'en-US',
+                {
+                  month: 'short',
+                }
+              )} 01 - ${new Date(lastTransaction).toLocaleDateString(
+                'en-US',
+                {
+                  day: 'numeric',
+                }
+              )}`
+            : '',
       },
     });
   }, [transactions]);
@@ -174,25 +178,33 @@ export default function Dashboard() {
           type="up"
           title="Deposit"
           amount={summaries.deposit.value}
-          lastTransition={`Last deposit ${summaries.deposit.lastTransaction.toLocaleDateString(
-            'en-US',
-            {
-              month: 'short',
-              day: 'numeric',
-            }
-          )}`}
+          lastTransition={
+            summaries.total.range === ''
+              ? ''
+              : `Last deposit ${summaries.deposit.lastTransaction.toLocaleDateString(
+                  'en-US',
+                  {
+                    month: 'short',
+                    day: 'numeric',
+                  }
+                )}`
+          }
         />
         <Summary
           type="down"
           title="Withdraw"
           amount={summaries.withdraw.value}
-          lastTransition={`Last withdraw ${summaries.withdraw.lastTransaction.toLocaleDateString(
-            'en-US',
-            {
-              month: 'short',
-              day: 'numeric',
-            }
-          )}`}
+          lastTransition={
+            summaries.total.range === ''
+              ? ''
+              : `Last withdraw ${summaries.withdraw.lastTransaction.toLocaleDateString(
+                  'en-US',
+                  {
+                    month: 'short',
+                    day: 'numeric',
+                  }
+                )}`
+          }
         />
         <Summary
           type="total"
@@ -202,13 +214,17 @@ export default function Dashboard() {
         />
       </SummaryCards>
       <TransactionsTitle>Transactions</TransactionsTitle>
-      <TransactionCards
-        showsVerticalScrollIndicator={false}
-        data={transactions}
-        renderItem={({ item }: any, index: number) => (
-          <Transaction data={item} key={index} />
-        )}
-      />
+      {transactions.length === 0 ? (
+        <NoData />
+      ) : (
+        <TransactionCards
+          showsVerticalScrollIndicator={false}
+          data={transactions}
+          renderItem={({ item }: any, index: number) => (
+            <Transaction data={item} key={index} />
+          )}
+        />
+      )}
     </DashboardContainer>
   );
 }
