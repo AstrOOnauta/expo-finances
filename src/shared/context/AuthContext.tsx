@@ -1,9 +1,10 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import * as AuthSession from 'expo-auth-session';
 
 import { ChildrenProps } from '../interfaces/childrenProps';
 import { GoogleAuthResponse } from '../interfaces/Responses/GoogleAuth';
 import { GoogleUserInfoResponse } from '../interfaces/Responses/GoogleUserInfo';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { CLIENT_ID } = process.env;
 const { REDIRECT_URI } = process.env;
@@ -25,6 +26,8 @@ const DEFAULT_VALUE = {
   user: { id: '', name: '', email: '', photo: '' },
   setUser: () => {},
 };
+
+const userKey = '@meteor-finances:user';
 
 const AuthContext = createContext({} as PropsAuthContext);
 
@@ -52,17 +55,32 @@ const AuthContextProvider: React.FC<ChildrenProps> = ({
         const userInfo =
           (await userResponse.json()) as GoogleUserInfoResponse;
 
-        setUser({
+        const newUser = {
           id: userInfo.id,
           email: userInfo.email,
           name: userInfo.name,
           photo: userInfo.picture,
-        });
+        };
+
+        setUser(newUser);
+
+        await AsyncStorage.setItem(userKey, JSON.stringify(newUser));
       }
     } catch (error) {
       throw new Error(error.message);
     }
   }
+
+  async function loadUser() {
+    const userString = await AsyncStorage.getItem(userKey);
+    const user = userString ? JSON.parse(userString) : null;
+
+    return user && setUser(user);
+  }
+
+  useEffect(() => {
+    loadUser();
+  }, []);
 
   return (
     <AuthContext.Provider

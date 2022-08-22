@@ -1,6 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import { VictoryPie } from 'victory-native';
 
 import { categories } from '../../shared/utils/categories';
@@ -28,6 +33,7 @@ import { useTheme } from 'styled-components';
 import { addMonths, subMonths } from 'date-fns';
 import { format } from 'date-fns/esm';
 import { Text } from 'react-native';
+import AuthContext from '../../shared/context/AuthContext';
 
 interface AmountByCategory {
   category: string;
@@ -37,6 +43,8 @@ interface AmountByCategory {
 }
 
 export default function Resume() {
+  const { user } = useContext(AuthContext);
+
   const [amountsByCategory, setAmountsByCategory] = useState<
     AmountByCategory[]
   >([]);
@@ -54,7 +62,7 @@ export default function Resume() {
 
   async function loadTransactions() {
     const response = await AsyncStorage.getItem(
-      '@finances:transactions'
+      `@meteor-finances:transactions_user:${user.id}`
     );
     const dataTransactions = response ? JSON.parse(response!) : [];
 

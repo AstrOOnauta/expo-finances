@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   Alert,
   Keyboard,
@@ -25,8 +25,11 @@ import {
   Title,
   TransactionInfoArea,
 } from './style';
+import AuthContext from '../../shared/context/AuthContext';
 
 export default function CreateTransaction() {
+  const { user } = useContext(AuthContext);
+
   const [transactionType, setTransactionType] = useState<string>('');
   const [category, setCategory] = useState<string>('');
   const [isCategoryModalOpen, setIsCategoryModalOpen] =
@@ -62,8 +65,7 @@ export default function CreateTransaction() {
     };
 
     try {
-      const dataKey = '@finances:transactions';
-
+      const dataKey = `@meteor-finances:transactions_user:${user.id}`;
       const data = await AsyncStorage.getItem(dataKey);
       const transactions = data ? JSON.parse(data) : [];
 

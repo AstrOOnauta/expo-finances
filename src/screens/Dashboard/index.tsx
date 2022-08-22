@@ -1,4 +1,9 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import { Feather, Ionicons } from '@expo/vector-icons';
 
 import {
@@ -22,6 +27,7 @@ import Transaction from '../../components/Transaction';
 import { TransactionsInterface } from '../../shared/interfaces/transactions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
+import AuthContext from '../../shared/context/AuthContext';
 
 interface SummariesInterface {
   deposit: {
@@ -39,6 +45,8 @@ interface SummariesInterface {
 }
 
 export default function Dashboard() {
+  const { user } = useContext(AuthContext);
+
   const [transactions, setTransactions] = useState<
     TransactionsInterface[]
   >([]);
@@ -59,7 +67,7 @@ export default function Dashboard() {
 
   async function loadTransactions() {
     const response = await AsyncStorage.getItem(
-      '@finances:transactions'
+      `@meteor-finances:transactions_user:${user.id}`
     );
     const dataTransactions = response ? JSON.parse(response!) : [];
     setTransactions(dataTransactions);
@@ -143,12 +151,12 @@ export default function Dashboard() {
             <Photo
               resizeMethod="resize"
               source={{
-                uri: 'https://avatars.githubusercontent.com/u/81580470?v=4',
+                uri: user.photo,
               }}
             />
             <Welcome>
               <Greeting>Hello,</Greeting>
-              <UserName>Willian</UserName>
+              <UserName>{user.name}</UserName>
             </Welcome>
           </UserInfo>
           <IconArea>

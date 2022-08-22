@@ -7,12 +7,10 @@ import {
   Poppins_500Medium,
   Poppins_700Bold,
 } from '@expo-google-fonts/poppins';
-import { NavigationContainer } from '@react-navigation/native';
 
 import theme from './src/styles/theme';
-import { AppRoutes } from './src/routes/app.routes';
-import SignIn from './src/screens/SignIn';
 import { AuthContextProvider } from './src/shared/context/AuthContext';
+import { Routes } from './src/routes';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -28,12 +26,9 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <StatusBar barStyle="light-content" backgroundColor="#303030" />
-      <NavigationContainer>
-        <AuthContextProvider>
-          <SignIn />
-        </AuthContextProvider>
-        {/* <AppRoutes /> */}
-      </NavigationContainer>
+      <AuthContextProvider>
+        <Routes />
+      </AuthContextProvider>
     </ThemeProvider>
   );
 }
