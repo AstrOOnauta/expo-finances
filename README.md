@@ -6,7 +6,7 @@ Finance smartphone app (Android & IOS), created in React Native (EXPO Bare Workf
 📺 Preview:
 <div align = "center">
   
-<img src="https://github.com/AstrOOnauta/meteor-finances-mobile/blob/main/preview.gif?raw=true">
+<img src="https://github.com/AstrOOnauta/meteor-finances-mobile/blob/develop/preview.gif?raw=true">
  
 </div>
 <hr>
