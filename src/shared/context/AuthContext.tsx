@@ -20,6 +20,7 @@ type PropsAuthContext = {
   user: UserType;
   setUser: React.Dispatch<React.SetStateAction<UserType>>;
   signInWithGoogle: () => Promise<void>;
+  signOut: () => Promise<void>;
 };
 
 const DEFAULT_VALUE = {
@@ -78,6 +79,11 @@ const AuthContextProvider: React.FC<ChildrenProps> = ({
     return user && setUser(user);
   }
 
+  async function signOut() {
+    setUser({ id: '', name: '', email: '', photo: '' });
+    await AsyncStorage.removeItem(userKey);
+  }
+
   useEffect(() => {
     loadUser();
   }, []);
@@ -88,6 +94,7 @@ const AuthContextProvider: React.FC<ChildrenProps> = ({
         user,
         setUser,
         signInWithGoogle,
+        signOut,
       }}
     >
       {children}

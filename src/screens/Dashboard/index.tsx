@@ -45,7 +45,7 @@ interface SummariesInterface {
 }
 
 export default function Dashboard() {
-  const { user } = useContext(AuthContext);
+  const { user, signOut } = useContext(AuthContext);
 
   const [transactions, setTransactions] = useState<
     TransactionsInterface[]
@@ -163,7 +163,7 @@ export default function Dashboard() {
             <EyeButton activeOpacity={0.6}>
               <Feather name="eye" size={24} color="#FBB034" />
             </EyeButton>
-            <SignOutButton activeOpacity={0.6}>
+            <SignOutButton activeOpacity={0.6} onPress={signOut}>
               <Ionicons name="power" size={24} color="#FBB034" />
             </SignOutButton>
           </IconArea>
